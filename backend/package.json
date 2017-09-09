@@ -1,0 +1,27 @@
+{
+  "name": "shopify-testing-backend",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "8.4.0"
+  },
+  "dependencies": {
+    "await-to-js": "^1.0.1",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-1": "^6.24.1",
+    "babel-register": "^6.24.1",
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
+    "express": "^4.15.4",
+    "helmet": "^3.8.1",
+    "mongoose": "^4.11.6",
+    "morgan": "^1.8.2",
+    "nodemon": "^1.11.0",
+    "superagent": "^3.6.0",
+    "uuid": "^3.1.0"
+  },
+  "scripts": {
+    "start": "nodemon ./index.js"
+  }
+}

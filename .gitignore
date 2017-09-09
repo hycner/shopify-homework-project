@@ -1,0 +1,17 @@
+# dependencies
+node_modules
+
+# testing
+coverage
+
+# production
+frontend/build
+frontend/src/**/*.css
+
+# editors
+.idea
+
+# misc
+.DS_Store
+.env
+npm-debug.log

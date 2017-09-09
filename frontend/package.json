@@ -1,0 +1,36 @@
+{
+  "name": "shopify-testing-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "8.4.0"
+  },
+  "devDependencies": {
+    "node-sass-chokidar": "^0.0.3",
+    "npm-run-all": "^4.0.2",
+    "react-scripts": "^1.0.11"
+  },
+  "dependencies": {
+    "antd": "^2.12.6",
+    "classnames": "^2.2.5",
+    "history": "^4.6.3",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.1.2",
+    "react-router-dom": "^4.1.2",
+    "react-router-redux": "^5.0.0-alpha.6",
+    "redux": "^3.7.2",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.2.0"
+  },
+  "scripts": {
+    "build": "npm run build:css && react-scripts build",
+    "build:css": "node-sass-chokidar src/ -o src/",
+    "eject": "react-scripts eject",
+    "start": "npm-run-all -p watch:css start:js",
+    "start:js": "react-scripts start",
+    "test": "react-scripts test --env=jsdom",
+    "watch:css": "npm run build:css && node-sass-chokidar src/ -o src/ --watch --recursive"
+  }
+}

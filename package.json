@@ -1,0 +1,19 @@
+{
+  "name": "shopify-testing",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "8.4.0"
+  },
+  "devDependencies": {
+    "chalk": "^2.1.0",
+    "dotenv": "^4.0.0",
+    "flow-bin": "^0.53.1",
+    "prettier": "^1.5.3"
+  },
+  "scripts": {
+    "flow": "flow; test $? -eq 0 -o $? -eq 2",
+    "format": "./node_modules/.bin/prettier --write \"{backend,frontend}/src/**/*.{js,jsx}\" --print-width 100 --single-quote --trailing-comma es5 --no-bracket-spacing",
+    "format:dry": "./node_modules/.bin/prettier -l \"{backend,frontend}/src/**/*.{js,jsx}\" --print-width 100 --single-quote --trailing-comma es5 --no-bracket-spacing"
+  }
+}
