@@ -5,7 +5,7 @@ import Accounts from '../models/accounts';
 import env from "../lib/env";
 import request from "superagent";
 
-export function getAccount(accountName: string) {
+export function getAccount(accountName: string): Promise<Object> {
   return new Promise((res, rej) => {
     Accounts.findOne({name: accountName}, (err, account) => {
       if (err) {
@@ -17,7 +17,8 @@ export function getAccount(accountName: string) {
   });
 }
 
-export function getAllAccounts() {
+type TGetAllAccountsReturn = Promise<Array<Object> | string>;
+export function getAllAccounts(): TGetAllAccountsReturn {
   return new Promise((res, rej) => {
     Accounts.find((err, accounts) => {
       if (err) {
@@ -29,7 +30,7 @@ export function getAllAccounts() {
   });
 }
 
-export function createAccount(accountName: string) {
+export function createAccount(accountName: string): Promise<Object> {
   return new Promise((res, rej) => {
     Accounts.create(
       {
@@ -47,28 +48,23 @@ export function createAccount(accountName: string) {
   });
 }
 
-export function updateAccount(id: string, fields: Object) {
+export function updateAccount(id: string, fields: Object): Promise<?string> {
   return new Promise((res, rej) => {
     Accounts.update(
       {_id: id},
-      // todo: remove old:
-      // { $set: { size: 'large' }},
       {$set: fields},
-      function(err, something) {
-        // todo: make sure this callback fires & works correctly
+      function(err) {
         if (err) {
           console.log(`Error updating account id '${id}'. Error: `, err);
           return rej(err);
         }
-        console.log('is this something?', something);
-        console.log(JSON.stringify(something));
-        res(something);
+        res();
       }
     );
   });
 }
 
-export function createShopifyToken(code: string, shop: string) {
+export function createShopifyToken(code: string, shop: string): Promise<string> {
   return new Promise((res, rej) => {
     request.post(`https://${shop}/admin/oauth/access_token`)
       .send({
@@ -76,13 +72,14 @@ export function createShopifyToken(code: string, shop: string) {
         client_secret: env.SHOPIFY_API_SECRET_KEY,
         code,
       })
-      .end((err, {access_token}) => {
-        if (err) {
-          console.log('Error creating shopify token:', err);
-          return rej(err.error.error_description);
-        }
+      .then((result) => {
+        console.log('** result', JSON.stringify(result));
 
-        res(access_token);
+        res(result.access_token);
+      })
+      .catch((err) => {
+        console.log('Error creating shopify token:', err);
+        rej(err.error.error_description);
       });
   });
 }

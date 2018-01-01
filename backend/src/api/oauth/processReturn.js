@@ -52,8 +52,9 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   // }
 
   // Get account
+  let accountName = query.shop.split('.')[0];
   let account: TAccount;
-  [err, account] = await to(getAccount(query.shop));
+  [err, account] = await to(getAccount(accountName));
   if (err) return res.status(400).json({error: 'Account not found'});
 
   // todo: remove

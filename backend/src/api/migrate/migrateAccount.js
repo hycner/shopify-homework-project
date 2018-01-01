@@ -9,7 +9,7 @@ import {fetchProducts, updateProducts} from '../../services/products';
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   let err;
-  let {accountName} = req.body;
+  let accountName = req.body.accountName.toLowerCase();
   console.log('accountName: ', accountName);
 
   // See if account already exists
