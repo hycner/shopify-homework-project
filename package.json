@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "8.4.0"
+    "node": "9.1.0"
   },
   "devDependencies": {
     "chalk": "^2.1.0",

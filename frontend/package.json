@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "8.4.0"
+    "node": "9.1.0"
   },
   "devDependencies": {
     "node-sass-chokidar": "^0.0.3",
