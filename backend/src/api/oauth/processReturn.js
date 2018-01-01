@@ -1,17 +1,19 @@
 // @flow
 import crypto from 'crypto';
+import querystring from 'querystring';
 
 import type {Request, Response, NextFunction} from 'express';
 import type {TAccount} from '../../../../types';
 
-import {getAccount} from '../../services/accounts';
+import {createShopifyToken, getAccount, updateAccount} from '../../services/accounts';
+import to from "await-to-js";
 
 type TQuery = {
   code: string,
   hmac: string,
-  timestamp: string,
-  state: string,
   shop: string,
+  state: string,
+  timestamp: string,
 };
 
 // todo: remove this
@@ -23,35 +25,59 @@ type TQuery = {
 //   "timestamp": "1337178173"
 // }
 
-// todo: this
 export default async (req: Request, res: Response, next: NextFunction) => {
+  let err;
   let query: TQuery = req.query;
   console.log('** query: ', query);
 
-  // Validate hmac
-  let joinedFields = `code=${query.code}&shop=${query.shop}&timestamp=${query.timestamp}`;
-  const hash = crypto.createHmac('sha256', query.state).update(joinedFields).digest('hex');
-  console.log(`** shopify's hmac: ${query.hmac}`);
-  console.log(`** my hmac: ${hash}`);
-  if (query.hmac !== hash) {
-    return res.status(400).json({error: 'HMAC validation failed'});
+  // todo: revise this with gprc or joi to validate incoming query
+  if (!query.shop && !query.hmac && !query.code && !query.state) {
+    return res.status(400).json({error: 'Shopify return payload malformed'});
   }
+
+  // todo: fix issue with hmac validation
+  // Validate hmac
+  // let joinedFields = querystring.stringify({
+  //   code: query.code,
+  //   shop: query.shop,
+  //   timestamp: query.timestamp,
+  // });
+  // const hash = crypto.createHmac('sha256', query.state)
+  //   .update(joinedFields)
+  //   .digest('hex');
+  // console.log(`** shopify's hmac: ${query.hmac}`);
+  // console.log(`**        my hmac: ${hash}`);
+  // if (query.hmac !== hash) {
+  //   return res.status(400).json({error: 'HMAC validation failed'});
+  // }
 
   // Get account
   let account: TAccount;
-  try {
-    account = await getAccount(query.shop);
-  } catch (e) {
-    return console.log(e);
-  }
+  [err, account] = await to(getAccount(query.shop));
+  if (err) return res.status(400).json({error: 'Account not found'});
 
-  // Abort if no account
-  if (!account) return res.status(400).json({error: 'Account not found'});
+  // todo: remove
+  console.log('** account:', JSON.stringify(account));
 
   // Compare secrets
   if (account.oauthSecret !== query.state) {
-    return console.log("Secrets don't match");
+    return res.status(400).json({error: 'Secrets do not match'});
   }
+
+  // Get shopify token for shop
+  let shopifyToken;
+  [err, shopifyToken] = await to(createShopifyToken(query.code, query.shop));
+  if (err) return res.status(400).json({error: err});
+
+  // todo: remove
+  console.log('** shopifyToken:', shopifyToken);
+
+  // Update account with token
+  [err] = await to(updateAccount(account._id, {shopifyKey: shopifyToken}));
+  if (err) return res.status(400).json({error: err});
+
+  // todo: remove
+  console.log('** account updated!');
 
   res.status(200).json(query);
 };

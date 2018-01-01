@@ -1,4 +1,5 @@
 export type TAccount = {
+  _id: string,
   name: string,
   shopifyKey: string,
   oauthSecret: string,

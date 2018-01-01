@@ -18,8 +18,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   if (err) return res.status(400).json({error: true});
 
   if (account) {
-    // If oauth isn't finished, send secret for redirect
     if (!account.shopifyKey) {
+      // If oauth isn't finished, send secret for redirect
       res.status(200).json({oauthSecret: account.oauthSecret});
     } else {
       // todo: see if this works

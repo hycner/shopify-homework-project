@@ -2,6 +2,8 @@
 import uuidV1 from 'uuid/v1';
 
 import Accounts from '../models/accounts';
+import env from "../lib/env";
+import request from "superagent";
 
 export function getAccount(accountName: string) {
   return new Promise((res, rej) => {
@@ -63,5 +65,24 @@ export function updateAccount(id: string, fields: Object) {
         res(something);
       }
     );
+  });
+}
+
+export function createShopifyToken(code: string, shop: string) {
+  return new Promise((res, rej) => {
+    request.post(`https://${shop}/admin/oauth/access_token`)
+      .send({
+        client_id: env.SHOPIFY_API_KEY,
+        client_secret: env.SHOPIFY_API_SECRET_KEY,
+        code,
+      })
+      .end((err, {access_token}) => {
+        if (err) {
+          console.log('Error creating shopify token:', err);
+          return rej(err.error.error_description);
+        }
+
+        res(access_token);
+      });
   });
 }

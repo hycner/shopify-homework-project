@@ -12,7 +12,8 @@ type TEnv = {
   MONGODB_USER: string,
   MONGODB_PASS: string,
   NODE_ENV: string,
-  SHOPIFY_URL: string,
+  // todo: figure out if i still need this var
+  // SHOPIFY_URL: string,
   SHOPIFY_API_KEY: string,
   SHOPIFY_API_SECRET_KEY: string,
 };
@@ -29,8 +30,7 @@ const env: TEnv = {
   MONGODB_USER: processVar('MONGODB_USER'),
   MONGODB_PASS: processVar('MONGODB_PASS'),
   NODE_ENV: processVar('NODE_ENV'),
-  SHOPIFY_URL: processVar('SHOPIFY_URL'),
-  // todo: make sure I still need the API key on the backend
+  // SHOPIFY_URL: processVar('SHOPIFY_URL'),
   SHOPIFY_API_KEY: processVar('SHOPIFY_API_KEY'),
   SHOPIFY_API_SECRET_KEY: processVar('SHOPIFY_API_SECRET_KEY'),
 };
